@@ -28,6 +28,10 @@ class ViewController: UIViewController,
         super.viewDidLoad()
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(takePhoto))
     }
+    
+    override func viewDidLayoutSubviews() {
+        addFaceRects()
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -67,6 +71,7 @@ class ViewController: UIViewController,
             } else {
                 guard let observations = request.results as? [VNFaceObservation] else { return }
                 self.detectedFaces = Array(zip(observations, [Bool](repeating: false, count: observations.count)))
+                self.addFaceRects()
             }
         }
         
@@ -76,6 +81,34 @@ class ViewController: UIViewController,
             try handler.perform([request])
         } catch {
             print(error.localizedDescription)
+        }
+    }
+    
+    func addFaceRects() {
+        //Elimina rectangulos anteriores
+        self.imageView.subviews.forEach { $0.removeFromSuperview() }
+        
+        //Define el tamaño de la imagen dentro de la ImageView
+        let imageRect = self.imageView.contentClippingRect
+        
+        for (index, face) in self.detectedFaces.enumerated() {
+            //Las fronteras de la cara
+            let boundingBox = face.observation.boundingBox
+            //Tamaño de la cara
+            let size = CGSize(width: boundingBox.width * imageRect.width,
+                              height: boundingBox.height * imageRect.height)
+            //Posicion de la cara
+            var origin = CGPoint(x: boundingBox.midX * imageRect.width, y: (1 - boundingBox.minY) * imageRect.height - size.height)
+            
+            //Offset
+            origin.y += imageRect.minY
+            
+            //Colocamos la UIView
+            let view = UIView(frame: CGRect(origin: origin, size: size))
+            view.tag = index
+            view.layer.borderColor = UIColor.red.cgColor
+            view.layer.borderWidth = 2.0
+            self.imageView.addSubview(view)
         }
     }
 }
