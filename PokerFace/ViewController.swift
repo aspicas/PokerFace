@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Vision
 
 class ViewController: UIViewController,
                       UIImagePickerControllerDelegate, //Conjunto de Metodos que se deben implementar para mostrar la seleccion de imagenes.
@@ -20,6 +21,8 @@ class ViewController: UIViewController,
     @IBOutlet weak var imageView: UIImageView!
     
     var inputImage: UIImage?
+    
+    var detectedFaces = [(observation: VNFaceObservation, isBlurred: Bool)]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +51,31 @@ class ViewController: UIViewController,
         self.inputImage = pickedImage
         self.imageView.image = inputImage
         dismiss(animated: true) {
-            //Detectar la cara de los usuarios 
+            //Detectar la cara de los usuarios
+            self.detectFaces()
+        }
+    }
+    
+    func detectFaces() {
+        guard let inputImage = inputImage else { return }
+        guard let ciImage = CIImage(image: inputImage) else { return }
+        
+        let request = VNDetectFaceRectanglesRequest { [unowned self]
+            request, error in
+            if let error = error {
+                print(error.localizedDescription)
+            } else {
+                guard let observations = request.results as? [VNFaceObservation] else { return }
+                self.detectedFaces = Array(zip(observations, [Bool](repeating: false, count: observations.count)))
+            }
+        }
+        
+        let handler = VNImageRequestHandler(ciImage: ciImage)
+        
+        do {
+            try handler.perform([request])
+        } catch {
+            print(error.localizedDescription)
         }
     }
 }
