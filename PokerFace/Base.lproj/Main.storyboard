@@ -28,9 +28,9 @@
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="FtX-8h-7YP" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="dEb-3z-P59"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="FtX-8h-7YP" secondAttribute="trailing" constant="20" id="CrY-Wt-pcq"/>
                             <constraint firstItem="FtX-8h-7YP" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="eM1-aI-Wah"/>
-                            <constraint firstItem="FtX-8h-7YP" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="rD9-iI-a2Z"/>
+                            <constraint firstItem="FtX-8h-7YP" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="fp4-35-FcJ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>

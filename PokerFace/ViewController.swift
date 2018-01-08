@@ -107,7 +107,7 @@ class ViewController: UIViewController,
             let view = UIView(frame: CGRect(origin: origin, size: size))
             view.tag = index
             view.layer.borderColor = UIColor.red.cgColor
-            view.layer.borderWidth = 2.0
+            view.layer.borderWidth = 2
             self.imageView.addSubview(view)
         }
     }
