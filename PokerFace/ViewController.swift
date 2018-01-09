@@ -28,6 +28,7 @@ class ViewController: UIViewController,
         super.viewDidLoad()
         self.imageView.isUserInteractionEnabled = true
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(takePhoto))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(sharePhoto))
     }
     
     override func viewDidLayoutSubviews() {
@@ -162,6 +163,12 @@ class ViewController: UIViewController,
         let tag = view.tag
         self.detectedFaces[tag].isBlurred = !self.detectedFaces[tag].isBlurred
         renderBlurredFaces()
+    }
+    
+    @objc func sharePhoto(){
+        guard let image = self.imageView.image else { return }
+        let activityVC = UIActivityViewController(activityItems: [image], applicationActivities: nil)
+        present(activityVC, animated: true)
     }
 }
 
