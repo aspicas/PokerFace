@@ -26,6 +26,7 @@ class ViewController: UIViewController,
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.imageView.isUserInteractionEnabled = true
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(takePhoto))
     }
     
@@ -108,8 +109,59 @@ class ViewController: UIViewController,
             view.tag = index
             view.layer.borderColor = UIColor.red.cgColor
             view.layer.borderWidth = 2
+            
             self.imageView.addSubview(view)
+            
+            let recognizer = UITapGestureRecognizer(target: self, action: #selector(faceTapped))
+            recognizer.numberOfTapsRequired = 1
+            view.addGestureRecognizer(recognizer)
         }
+    }
+    
+    func renderBlurredFaces() {
+        guard let uiImage = inputImage else { return }
+        guard let cgImage = uiImage.cgImage else { return }
+        let ciImage = CIImage(cgImage: cgImage)
+        
+        let filter = CIFilter(name: "CIPixellate")
+        filter?.setValue(ciImage, forKey: kCIInputImageKey)
+        filter?.setValue(10, forKey: kCIInputScaleKey)
+        guard let outputImage = filter?.outputImage else { return }
+        
+        let blurredImage = UIImage(ciImage: outputImage)
+        
+        let renderer = UIGraphicsImageRenderer(size: uiImage.size)
+        
+        let result = renderer.image { (ctx) in
+            uiImage.draw(at: .zero)
+            
+            let path = UIBezierPath() //Renderiza UIViews personalizados
+            
+            for face in detectedFaces {
+                if face.isBlurred {
+                    let boundingBox = face.observation.boundingBox
+                    let size = CGSize(width: boundingBox.size.width * uiImage.size.width,
+                                      height: boundingBox.size.height * uiImage.size.height)
+                    let origin = CGPoint(x: boundingBox.midX * uiImage.size.width, y: (1-boundingBox.midY) * uiImage.size.height)
+                    let rect = CGRect(origin: origin, size: size)
+                    path.append(UIBezierPath(rect: rect))
+                }
+            }
+            
+            if !path.isEmpty {
+                path.addClip()
+                blurredImage.draw(at: .zero)
+            }
+        }
+        
+        self.imageView.image = result
+    }
+    
+    @objc func faceTapped(_ sender: UITapGestureRecognizer){
+        guard let view = sender.view else { return }
+        let tag = view.tag
+        self.detectedFaces[tag].isBlurred = !self.detectedFaces[tag].isBlurred
+        renderBlurredFaces()
     }
 }
 
