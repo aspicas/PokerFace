@@ -25,17 +25,28 @@
                                     <constraint firstAttribute="width" secondItem="FtX-8h-7YP" secondAttribute="height" multiplier="1:1" id="HQa-Ri-BbY"/>
                                 </constraints>
                             </imageView>
+                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="10" minValue="1" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="EWq-FD-eyk">
+                                <rect key="frame" x="18" y="530" width="284" height="31"/>
+                                <connections>
+                                    <action selector="blurChange" destination="BYZ-38-t0r" eventType="valueChanged" id="fiv-Cn-sK3"/>
+                                </connections>
+                            </slider>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="EWq-FD-eyk" secondAttribute="bottom" constant="8" id="1oo-BH-fld"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="FtX-8h-7YP" secondAttribute="trailing" constant="20" id="CrY-Wt-pcq"/>
+                            <constraint firstItem="EWq-FD-eyk" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Jxk-wQ-L8h"/>
                             <constraint firstItem="FtX-8h-7YP" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="eM1-aI-Wah"/>
                             <constraint firstItem="FtX-8h-7YP" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="fp4-35-FcJ"/>
+                            <constraint firstItem="EWq-FD-eyk" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="sdN-bz-8S5"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="EWq-FD-eyk" secondAttribute="trailing" constant="20" id="uP4-60-paQ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <navigationItem key="navigationItem" title="Poker face" id="Jmh-jP-6Ky"/>
                     <connections>
+                        <outlet property="blurSlider" destination="EWq-FD-eyk" id="S70-zw-xtQ"/>
                         <outlet property="imageView" destination="FtX-8h-7YP" id="d4q-8P-6uI"/>
                     </connections>
                 </viewController>

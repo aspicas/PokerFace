@@ -19,14 +19,21 @@ class ViewController: UIViewController,
     }
     
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var blurSlider: UISlider!
     
     var inputImage: UIImage?
     
+    var showSquares = true
     var detectedFaces = [(observation: VNFaceObservation, isBlurred: Bool)]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.imageView.isUserInteractionEnabled = true
+        
+        let recognizer = UITapGestureRecognizer(target: self, action: #selector(toogleSqueare))
+        recognizer.numberOfTapsRequired = 2
+        self.imageView.addGestureRecognizer(recognizer)
+        
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(takePhoto))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(sharePhoto))
     }
@@ -109,8 +116,12 @@ class ViewController: UIViewController,
             let view = UIView(frame: CGRect(origin: origin, size: size))
             view.tag = index
             view.layer.borderColor = UIColor.red.cgColor
-            view.layer.borderWidth = 2
-            
+            if showSquares {
+                view.layer.borderWidth = 2
+            } else {
+                view.layer.borderWidth = 0
+            }
+                
             self.imageView.addSubview(view)
             
             let recognizer = UITapGestureRecognizer(target: self, action: #selector(faceTapped))
@@ -126,7 +137,7 @@ class ViewController: UIViewController,
         
         let filter = CIFilter(name: "CIPixellate")
         filter?.setValue(ciImage, forKey: kCIInputImageKey)
-        filter?.setValue(10, forKey: kCIInputScaleKey)
+        filter?.setValue(Int(self.blurSlider.value), forKey: kCIInputScaleKey)
         guard let outputImage = filter?.outputImage else { return }
         
         let blurredImage = UIImage(ciImage: outputImage)
@@ -170,5 +181,15 @@ class ViewController: UIViewController,
         let activityVC = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         present(activityVC, animated: true)
     }
+    
+    @objc func toogleSqueare(){
+        showSquares = !showSquares
+        detectFaces()
+    }
+    
+    @IBAction func blurChange() {
+        self.renderBlurredFaces()
+    }
+    
 }
 
